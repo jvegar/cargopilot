@@ -16,6 +16,8 @@ import {
   UpdateWorkDayDto,
 } from '@cargopilot/microservice.core';
 
+import { MicroservicesClient } from 'src/kafka-clients';
+
 
 @Injectable()
 export class ShiftService {}

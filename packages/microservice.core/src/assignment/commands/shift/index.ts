@@ -11,3 +11,4 @@ export * from './migrate-work-day.command';
 export * from './start-break.command';
 export * from './start-breakdown.command';
 export * from './update-workday.command';
+export * from './add-stop.command';
