@@ -1,9 +1,9 @@
 import { StorableEvent } from './interfaces/storable-event';
-import * as eventstore from 'eventstore';
+import eventstore, { IEventStore } from 'eventstore';
 import * as url from 'url';
 
 export class EventStore {
-  private readonly eventstore;
+  private readonly eventstore: IEventStore;
   private eventStoreLaunched = false;
 
   constructor(mongoURL: string) {
