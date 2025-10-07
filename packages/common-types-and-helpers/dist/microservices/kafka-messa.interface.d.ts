@@ -9,3 +9,4 @@ export interface IKafkaMessage<T> {
     value: T;
     headers: Record<string, any>;
 }
+//# sourceMappingURL=kafka-messa.interface.d.ts.map

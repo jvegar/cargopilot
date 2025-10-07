@@ -15,3 +15,4 @@ export declare class ErrorBuilder {
     get ActiveBreak(): IValidationError;
     get ActiveClockOut(): IValidationError;
 }
+//# sourceMappingURL=error-builder.d.ts.map

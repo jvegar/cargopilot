@@ -10,10 +10,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4"
   },
   "dependencies": {
+    "@cargopilot/event-sourcing": "workspace:*",
     "uuid": "^11.1.0"
   }
 }

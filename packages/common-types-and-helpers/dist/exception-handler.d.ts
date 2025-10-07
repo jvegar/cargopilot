@@ -5,3 +5,4 @@ export declare class ErrorHandler {
     constructor(logger: any);
     handleException(msg: string, recipient: string, emmitCallback: (data: IValidationErrorToUser) => void): (e: any) => void;
 }
+//# sourceMappingURL=exception-handler.d.ts.map

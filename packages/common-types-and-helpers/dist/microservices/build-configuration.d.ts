@@ -1,4 +1,4 @@
-export function buildConfiguration(brokers: string[], isClient: boolean): {
+export declare function buildConfiguration(brokers: string[], isClient: boolean): {
     haulApi: {
         client: {
             clientId: string;
@@ -136,3 +136,4 @@ export function buildConfiguration(brokers: string[], isClient: boolean): {
         };
     };
 };
+//# sourceMappingURL=build-configuration.d.ts.map

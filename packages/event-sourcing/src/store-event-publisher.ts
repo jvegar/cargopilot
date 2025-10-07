@@ -10,7 +10,7 @@ export interface Constructor<T> {
 export class StoreEventPublisher {
   constructor(private readonly eventBus: StoreEventBus) {}
 
-  mergeClassContext<T extends Constructor<AggregateRoot>>(metatype: T): T {
+  public mergeClassContext<T extends Constructor<AggregateRoot>>(metatype: T): T {
     const eventBus = this.eventBus;
     return class extends metatype {
       publish(event: IEvent) {
@@ -19,7 +19,7 @@ export class StoreEventPublisher {
     };
   }
 
-  mergeObjectContext<T extends AggregateRoot>(object: T): T {
+  public mergeObjectContext<T extends AggregateRoot>(object: T): T {
     const eventBus = this.eventBus;
     object.publish = (event: IEvent) => {
       eventBus.publish(event);

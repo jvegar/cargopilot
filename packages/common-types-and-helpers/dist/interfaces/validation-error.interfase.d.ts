@@ -12,3 +12,4 @@ export interface IValidationError {
 export interface IValidationErrorToUser extends Omit<IValidationError, 'isCustomError'> {
     recipient: string;
 }
+//# sourceMappingURL=validation-error.interfase.d.ts.map

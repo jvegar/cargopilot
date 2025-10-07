@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./build-configuration"), exports);
 __exportStar(require("./kafka-messa.interface"), exports);
 __exportStar(require("./interfaces"), exports);
+__exportStar(require("./abstract-aggregate.repository"), exports);

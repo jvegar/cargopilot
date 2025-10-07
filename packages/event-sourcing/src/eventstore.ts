@@ -5,6 +5,7 @@ import * as url from 'url';
 export class EventStore {
   private readonly eventstore: IEventStore;
   private eventStoreLaunched = false;
+  readonly snapshotLimit: any;
 
   constructor(mongoURL: string) {
     let ssl = false;
@@ -34,20 +35,68 @@ export class EventStore {
     return this.eventStoreLaunched;
   }
 
-  public async getEvents(
+  public getStream(
     aggregate: string,
     id: string,
-  ): Promise<StorableEvent[]> {
+    revMin: number,
+    revMax: number,
+  ): Promise<unknown> {
+    return new Promise((res, rej) => {
+      this.eventstore.getEventStream(
+        this.getAgrregateId(aggregate, id),
+        revMin,
+        revMax,
+        (err, stream) => {
+          if (err) rej(err);
+          res(stream.events.map(event => this.getStorableEventFromPayload(event.payload)));
+        },
+      );
+    });
+  }
+
+  public storeSnapshotingPoint(aggregate, id, data, version = 1) {
+    const streamId = this.getAgrregateId(aggregate, id);
+    return new Promise((res, rej) => {
+      this.eventstore.getFromSnapshot(streamId, (err, snapshot, stream) => {
+        this.eventstore.createSnapshot(
+          {
+            streamId,
+            data,
+            revision: stream.lastRevision,
+            version,
+          },
+          err => (err ? rej(err) : res(true)),
+        );
+      });
+    });
+  }
+
+  public async getEventsAndSnapshot(
+    aggregate: string,
+    id: string,
+  ): Promise<{
+    snapshot: any;
+    events: StorableEvent[];
+  }> {
+    const streamId = this.getAgrregateId(aggregate, id);
+    return new Promise((res, rej) => {
+      this.eventstore.getFromSnapshot(streamId, (err, snapshot, stream) => {
+        const snap = snapshot === null || snapshot === void 0 ? void 0 : snapshot.data;
+        res({
+          snapshot: snap,
+          events: stream.events.map(event => this.getStorableEventFromPayload(event.payload)),
+        });
+      });
+    });
+  }
+
+  public async getEvents(aggregate: string, id: string): Promise<StorableEvent[]> {
     return new Promise<StorableEvent[]>(resolve => {
       this.eventstore.getFromSnapshot(
         this.getAgrregateId(aggregate, id),
         (err, snapshot, stream) => {
           // snapshot.data; // Snapshot
-          resolve(
-            stream.events.map(event =>
-              this.getStorableEventFromPayload(event.payload),
-            ),
-          );
+          resolve(stream.events.map(event => this.getStorableEventFromPayload(event.payload)));
         },
       );
     });
@@ -93,15 +142,15 @@ export class EventStore {
     });
   }
 
+  private getAgrregateId(aggregate: string, id: string): string {
+    return aggregate + '-' + id;
+  }
+
   // Monkey patch to obtain event 'instances' from db
   private getStorableEventFromPayload(payload: any): StorableEvent {
     const eventPlain = payload;
     eventPlain.constructor = { name: eventPlain.eventName };
 
     return Object.assign(Object.create(eventPlain), eventPlain);
-  }
-
-  private getAgrregateId(aggregate: string, id: string): string {
-    return aggregate + '-' + id;
   }
 }
